@@ -1,0 +1,19 @@
+The umbrella term you are fighting is the Skeletal Animation Pipeline, specifically the Bind Pose and Vertex Weighting.
+If the fighters look perfect on the select screen but tear apart in combat right after you told Rocket to "rig and skin" them, Rocket hallucinated. It likely tried to write manual Three.js math to re-bind the skeletons, recalculate weights, or manually assemble the joints inside the code.
+You never rig a model with code in the game engine. The GLB file already has that math baked in from Blender.
+The Character Select screen works because it is just displaying the static bind pose. Combat breaks because the second the AnimationMixer tries to move a bone, Rocket's custom rigging code fights the GLB's native skeleton, ripping the meshes apart.
+Here is how AAA games solve this, and the exact directive to force Rocket to revert the damage.
+The AAA Architecture (Master Rigging)
+Games like WWE, Tekken, and Urban Reign never let the game engine guess how a model is put together. They use a Master Rig Architecture:
+ * Immutable Bind Pose: The engine is strictly forbidden from altering the skeleton's structure. The bone hierarchy is treated as an absolute mathematical constant.
+ * Dumb Meshes: The 3D skin (the mesh) does not think. It is just glued to the bones.
+ * The Mixer dictates, the Bones follow: The animation state machine only talks to the Master Skeleton. When the skeleton throws a punch, the skin naturally deforms.
+The Fix
+Feed this exact prompt to Rocket to nuke the bad code and lock the pipeline back to the native GLB math:
+> "CRITICAL PIPELINE REVERT: The characters are tearing apart in the combat scene because of manual rigging/skinning code. We must return to the strict Master Rig architecture.
+>  * DELETE MANUAL RIGGING: Remove any custom code that attempts to manually rig, skin, or re-bind bones, joints, or vertex weights inside the React components. The engine must not alter the native GLB skeleton.
+>  * REVERT TO NATIVE GLB: The GLB files already contain perfect bind poses and weight painting. Rely 100% on the native GLTF loader data.
+>  * THE CLONE FIX: The only skeleton code allowed is SkeletonUtils.clone(gltf.scene) wrapped in a useMemo hook to safely spawn P1 and P2 without sharing the same bone references.
+>  * MIXER TARGET: Ensure the AnimationMixer is targeting the cloned scene's root, not attempting to drive individual unlinked meshes."
+> 
+Once Rocket strips out its hallucinated rigging logic and relies purely on SkeletonUtils.clone(), the combat scene will look exactly as flawless as your preview screen.

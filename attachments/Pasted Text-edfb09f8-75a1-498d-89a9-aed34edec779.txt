@@ -1,0 +1,82 @@
+Grok said : Bad gateway Error code 502
+Visit cloudflare.com for more information.
+2026-09-16 18:27:28 UTC
+You
+Browser Working
+Atlanta
+Cloudflare Working
+hds-iq32ubgyc88q-6014-rbagz.grok-code-wild.hades-www.grok-sandbox.com
+Host Error
+What happened?
+The web server reported a bad gateway error.
+
+What can I do?
+Please try again in a few minutes.
+
+Cloudflare Ray ID: a3c1ece489805f98
+Your IP: Click to reveal
+Performance & security by CloudflareIntegration is on rocket-update, not a rewrite. PR #19 was inspected and not copied — its loader still assumed {bones:{frames:[{rx,ry,rz}]}}, which is not the real Bannon format.
+
+Draft PR: mhvnsnt/Brutal-Fist#21 → rocket-update
+
+	
+
+Branch	agent/bannon-euler-motion-integration
+Starting SHA	d6674e4361ab9b86a367770611c254628c20ab18 (rocket-update HEAD)
+Head SHA	96f09daa0aad1895fe667cc0e8a18b4cd311fdc3
+Base	rocket-update — not main, no reset/force-push
+
+
+What actually changed
+
+Euler rx/ry/rz Mixamo keys from the live Bannon bank now convert to quaternion tracks, bind onto the cloned mixer skeleton, and feed FighterMesh through existing AnimationBridge lookup.
+
+File	Role
+
+src/engine/retarget/BannonEulerMotionAdapter.ts	Euler → quat (new)
+src/engine/retarget/BannonClipJsonAdapter.ts	GitHub index load + format detect
+src/engine/retarget/AnimationRetargeter.ts	bindClipTracksToTargetBones
+src/engine/pipeline/CharacterPipeline.ts	Bind bank onto live clone
+animation_bridge/retarget.ts	No idle substitute for combat verbs
+src/components/FighterMesh.tsx	Uses AnimationBridge; MISSING_CLIP stays missing
+src/components/PreCombatValidationScreen.tsx	FIGHT only if both PASS; WARN ≠ PASS
+scripts/verify-bannon-motion-bank.mjs	Offline measurement
+
+
+Not added: PR #19’s PreCombatRosterGate.tsx, src/engine/combat/AnimationSourceRegistry.ts, BannonMotionBankLoader.ts.
+
+Measurements (node scripts/verify-bannon-motion-bank.mjs)
+
+Source: https://raw.githubusercontent.com/mhvnsnt/Bannon/main/assets/moves/clips/index.json
+Format: BANNON_EULER_RX_RY_RZ — confirmed hasQuaternion: false on every preferred clip.
+
+Metric	Value
+
+Index size	202
+Preferred attempted	11 required semantic states
+Converted	11 / 11
+Failed	0
+Tracks / clip	52 Mixamo quaternion tracks
+Mixamo identity unresolved	0
+Canonical 17-bone unresolved / clip	32 (fingers/toes — reported, not rewritten onto fake bones)
+Canonical bones covered	17 / 17
+Total quaternion angular travel	769.03 rad across 11 clips
+Visible SkinnedMeshes (this run)	not measured on a live GLB
+Target skeleton bones (this run)	Mixamo identity 52; canonical bind target 17
+
+
+Resolved: idle, walk_forward, walk_back, strafe_left, strafe_right, attack_1, attack_2, block, hit_reaction, knockdown, getup
+
+MISSING_CLIP (required set): none
+
+Per-clip travel (radians): IDLE 66.99 · DWARF_WALK 34.07 · GINGA_BACKWARD 82.95 · GINGA_SIDEWAYS_2 143.88 · CROUCH_TORCH_WALK_RIGHT 37.02 · BOXING 38.36 · HURRICANE_KICK 25.13 · CENTER_BLOCK 48.54 · HIT_REACTION 30.14 · FALLING_FLAT_IMPACT 72.46 · KIP_UP 189.49
+
+FIGHT
+
+Blocked. Correctly. Conversion PASS is not a skinned-rig PASS.
+
+Default Bannon/Maime roster entries are named-part, not skinned. This branch does not invent a skeleton, does not stamp procedural clips as AUTHORED, and does not unlock FIGHT on WARN.
+
+tsc --noEmit still has a large set of pre-existing Rocket errors (GameEngine, BrutalFistMoveCatalog, etc.). None of the new Euler adapter / bind / gate files added to that list.
+
+The game is not visually fixed until a live Mixamo-skinned clone actually deforms. Next honest step is a skinned target GLB (or a real *_rigged_ready.glb roster swap) — not another animation architecture.

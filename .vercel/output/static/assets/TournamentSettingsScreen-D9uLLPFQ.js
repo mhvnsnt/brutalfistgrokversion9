@@ -1,0 +1,1 @@
+import{n as e,r as t}from"./routes-CzS4LU2n.js";export{e as DEFAULT_TOURNAMENT_SETTINGS,t as default};

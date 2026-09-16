@@ -1,0 +1,26 @@
+Tekken 3 set the blueprint for how 3D fighters handle their menus. It stripped away the clutter and focused on exactly two things: the arcade grid and the active 3D model.
+Here is how that design architecture evolved, what worked, and what they changed as the hardware got stronger.
+The Tekken 3 Blueprint (1997)
+The genius of Tekken 3 is in its anchor points.
+ * Bottom-Anchored Grid: The character grid is slammed to the very bottom of the screen. This wasn't just a stylistic choice; it was a technical one. It left the entire upper 70% of the screen open to render the actual 3D character models fighting or posing in real-time.
+ * The Hidden Expansion: It started as a clean rectangle. As you unlocked characters, the grid literally grew outward, adding "wings" to the sides. It felt like the game was physically expanding.
+ * Blue/Tech Aesthetic: Heavy use of scanlines, deep blues, and sharp, metallic UI borders. It felt like an arcade motherboard.
+If you are building a PSX-style fighter, this is the layout to lock in. Keep the grid at the bottom, keep the portraits small, and let the 3D model take center stage.
+The Y2K Shift: Tekken 4 (2001)
+Tekken 4 threw the grid in the trash and went full Y2K experimental.
+ * Verticality: Instead of a block grid, Tekken 4 used massive, high-res vertical portraits. You scrolled through them almost like a stylized list rather than an arcade board.
+ * Atmosphere Over Arcade: The UI was sleek, moody, and club-inspired. It felt less like a fighting game and more like a high-end underground fight club.
+ * The Problem: It looked incredible, but it was slow to navigate for tournament play. It lacked the instant muscle-memory "two taps right, one tap down" speed of a standard grid.
+The Return to the Grid (Tekken 5 & 6)
+Namco realized the Tekken 3 layout was functionally superior. Tekken 5 (2004) and Tekken 6 (2007) brought back the arcade grid but upgraded the materials.
+ * Floating UI: The grid was no longer a flat 2D image plastered to the bottom. The UI elements floated in 3D space with transparency, allowing the stage background and character renders to bleed through.
+ * Metallic Trims: They traded the blue tech-aesthetic of Tekken 3 for heavy golds, silvers, and glass textures.
+The Expansion Era
+ * Tekken 7 (2015)
+   The Horizontal Spread
+   The roster got so massive with DLC that a standard grid blocked too much of the screen. They moved to a horizontally scrolling banner grid. It worked, but it felt cluttered and lost the tight, centralized focus of the classic games.
+ * Tekken 8 (2024)
+   The High-Fidelity Anchor
+   A return to form. They brought back the massive, centralized block grid, pushing it slightly down and letting the hyper-detailed 3D renders dominate the left and right sides of the screen. Clean, fast, and responsive.
+> The UI Takeaway: The grid exists to serve the 3D model. The faster the player can pick a portrait and see the actual character model load in, the better the menu feels.
+> 

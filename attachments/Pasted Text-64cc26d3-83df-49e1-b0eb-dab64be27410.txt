@@ -1,0 +1,16 @@
+This is the exact wall that kills most solo 3D projects. When the models look perfect standing still but turn into a twisted, exploding mess the second they throw a punch, you are fighting the engine's interpretation of your 3D assets.
+The Umbrella Terms
+The entire discipline of making a 3D model move without breaking is called the Skeletal Animation Pipeline or Character Deformation. It is the mathematical bridge between the static 3D mesh (the skin) and the animation data (the movement).
+What Those Specific Bugs Are Called
+When you are hunting for fixes, use these exact terms so you aren't guessing:
+ * Floating or Separated Limbs: This is a Skeleton Desync or Bind Matrix Corruption. The engine lost the mathematical connection between the skeleton and the skin, literally tearing the character into pieces when a bone moves.
+ * Twisted Limbs & Backward Joints: This is a Transform Space Mismatch or a Retargeting Error. The engine is confusing local bone rotation (how the elbow naturally bends) with world rotation (which way the character is currently facing).
+ * Tears, Spikes, and Stretching: This is a Weight Painting Failure. A vertex on the bicep was accidentally assigned to the foot bone in your 3D software. When the foot moves, it stretches a massive spike of skin across the arena.
+ * Invisible or Missing Body Parts: This is Frustum Culling. The engine calculates that the root bone is technically off-camera, so it stops drawing the mesh to save memory, causing limbs to vanish mid-punch.
+How AAA Games Lock This Down
+Engines running Tekken, Schwarzerblitz, or Night Sky Engine never write code to manually fix joints or re-attach limbs during gameplay. They use a strict Master Rig Architecture:
+ * Immutable Bind Pose: The character's neutral stance (T-pose or A-pose) is finalized entirely outside the engine. The game runtime is strictly forbidden from altering this baseline skeleton.
+ * Dumb Meshes: The 3D skin does absolutely zero thinking. It just blindly follows the bones based on the baked weight paint.
+ * Targeted Animation: The game logic never moves the skin directly. The combat state machine tells the animation to move the bones. The bones then naturally deform the skin.
+If your models are exploding at runtime across all your projects, your engine logic is likely trying to mathematically rebuild the skeletons or recalculate bone weights on the fly, instead of just reading the files.
+Are you using Blender to rig, weight-paint, and export these models before bringing them into the engine?

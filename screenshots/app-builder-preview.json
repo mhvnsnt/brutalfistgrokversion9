@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Brutal Fist",
+      "hasCanvas": false,
+      "bodyTextLen": 34,
+      "bodyTextHash": "83deffd7084237b287479c90cd8d48f18932c8cba11baa73958c07ee1563a853",
+      "bodyTextPrefix": "SCHWARZERBLITZ RUNTIME BRUTAL FIST",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Brutal Fist",
+      "hasCanvas": false,
+      "bodyTextLen": 34,
+      "bodyTextHash": "83deffd7084237b287479c90cd8d48f18932c8cba11baa73958c07ee1563a853",
+      "bodyTextPrefix": "SCHWARZERBLITZ RUNTIME BRUTAL FIST",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-preview.json"
+}

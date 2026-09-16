@@ -1,0 +1,231 @@
+Yes — this screen tells us something very specific: the rigged 3D assets are now being recognized, but the character-select screen is no longer rendering the 3D preview. That's separate from the animation-validation problem.
+
+The pre-combat gate itself is behaving correctly: both Bannon and Maime have a real skinned mesh and skeleton, while animation evidence is still WARN.
+
+What needs fixing now
+
+Tell Grok/Rocket to work on mhvnsnt/Brutal-Fist → rocket-update, without replacing the existing animation/rig work.
+
+Give it this exact instruction:
+
+Work on "mhvnsnt/Brutal-Fist", branch "rocket-update". Do NOT reset, rewrite, or replace the current rigging/animation work.
+
+P0 — RESTORE THE CHARACTER SELECT 3D FIGHTER MODELS
+
+The current character selection screen has lost its visible 3D fighter previews. The pre-combat validation screen now correctly recognizes:
+
+PLAYER 1:
+BANNON → "BANNON_rigged_ready.glb"
+SKINNED
+Visible Skinned Meshes: PRESENT
+Skeleton Bones: SKINNED
+
+PLAYER 2:
+MAIME → "MAIME_rigged_ready.glb"
+SKINNED
+Visible Skinned Meshes: PRESENT
+Skeleton Bones: SKINNED
+
+The models must appear again in the CHARACTER SELECT screen.
+
+IMPORTANT:
+Do not solve this by replacing the models with 2D images.
+Do not remove the GLB roster.
+Do not use static fallback characters.
+Restore the existing 3D GLB preview path and make it use the same canonical rigged roster assets now used by combat.
+
+Trace the character-select rendering path and identify where the 3D FighterMesh/GLB preview was disconnected when "*_rigged_ready.glb" was introduced.
+
+The character-select screen should render:
+
+- actual BANNON_rigged_ready.glb
+- actual MAIME_rigged_ready.glb
+- visible SkinnedMesh
+- real skeleton
+- correct materials/textures
+- correct scale/orientation
+- no synthetic rigging
+- no procedural replacement model
+
+Do not make character-select validation depend on combat entry.
+
+P1 — PRESERVE THE CURRENT PRE-COMBAT GATE
+
+The current WARN behavior is correct.
+
+Do NOT turn WARN into PASS.
+
+Do NOT automatically enable the test override.
+
+Do NOT generate fake authored clips.
+
+Keep:
+PASS = measured evidence
+WARN = runtime evidence still required
+BLOCKED = failed validation
+UNKNOWN = insufficient evidence
+
+P2 — FIX THE ACTUAL ANIMATION EVIDENCE PATH
+
+The current screen says:
+
+Animation Clips > 0
+REQUIRES RUNTIME VALIDATION — SEE ANIMATIONTESTARENA
+
+No MISSING_CLIP Verdicts
+REQUIRES RUNTIME VALIDATION
+
+AnimationSourceRegistry Complete
+11 STATES REQUIRED — VERIFY IN ANIMATIONTESTARENA
+
+Now make the AnimationTestArena actually load and play the real Bannon motion-bank clips against the real visible cloned rigged GLB.
+
+Required chain:
+
+"BANNON_rigged_ready.glb"
+→ GLTFLoader
+→ SkeletonUtils.clone()
+→ visible cloned SkinnedMesh/Skeleton
+→ actual Bannon "assets/moves/clips/*.json"
+→ "BannonClipJsonAdapter"
+→ Euler rx/ry/rz → quaternion tracks
+→ "AnimationRetargeter"
+→ target skeleton bone binding
+→ "THREE.AnimationClip"
+→ "AnimationMixer(clonedScene)"
+→ "AnimationBridge"
+→ semantic state
+→ visible skeleton deformation
+
+Do not merely register the clips in a registry and call that runtime validation.
+
+The test arena must prove the clip is actually deforming the visible cloned mesh.
+
+For each semantic state show/measure:
+
+idle
+walk_forward
+attack_1
+attack_2
+block
+hit_reaction
+knockdown
+getup
+strafe_left
+strafe_right
+walk_back
+
+For each test report:
+
+- clip source: AUTHORED_CLIP / RETARGETED_AUTHORED_CLIP / PLACEHOLDER_TEST_CLIP / MISSING_CLIP
+- target skeleton bone count
+- SkinnedMesh count
+- track count
+- resolved tracks
+- unresolved tracks
+- mixer root
+- active action
+- measured bone travel
+- measured mesh deformation
+
+A clip is NOT PASS merely because AnimationClip exists.
+
+A real animation PASS requires:
+
+1. visible cloned SkinnedMesh
+2. visible target Skeleton
+3. clip loaded
+4. tracks resolve to target bones
+5. mixer updates
+6. bone transforms change
+7. skinned geometry visibly deforms
+
+If any of those cannot be demonstrated, report WARN/UNKNOWN rather than PASS.
+
+P3 — FIX THE CHARACTER SELECT / COMBAT ASSET CONTRACT
+
+Create one canonical fighter asset resolver so Character Select, PreCombatValidation, AnimationTestArena, and CombatArena3D all resolve the same fighter asset.
+
+Example conceptual contract:
+
+BANNON → "/models/BANNON_rigged_ready.glb"
+MAIME → "/models/MAIME_rigged_ready.glb"
+
+Do not let Character Select use an obsolete "BANNON.glb"/"MAIME.glb" path while combat uses "*_rigged_ready.glb".
+
+P4 — DO NOT BREAK THE EXISTING 2D CHARACTER-SELECT DESIGN
+
+Restore the previous composition rather than redesigning it.
+
+The character-select screen is a hybrid:
+
+- 2D UI/background/frame/text layer
+- 3D GLB fighter preview layer
+
+Keep those responsibilities separate.
+
+The 3D fighter should occupy the existing preview viewport/card area and remain behind the 2D selection UI.
+
+Do not let the new validation/pre-combat screen replace the actual character-select presentation.
+
+P5 — VERIFY
+
+Run the relevant build/type checks.
+
+Then verify in the browser:
+
+Character Select:
+BANNON visible in 3D
+MAIME visible in 3D
+
+Selection changes the correct 3D model.
+
+Pre-Combat:
+both models resolve to their rigged-ready GLBs
+skeleton/skinned checks remain PASS
+animation checks remain WARN until runtime evidence is actually proven
+
+Animation Test Arena:
+real clips load
+real mixer drives cloned skeleton
+bones visibly move
+mesh visibly deforms
+
+Combat:
+no invisible fighters
+movement still works
+idle works
+walk works
+attacks work
+block works
+hit reaction works
+knockdown/getup work
+
+Most important: do not hide the problem with a fallback. Instrument the actual asset path and fix the broken connection.The important distinction
+
+Right now you've actually got two different problems:
+
+Problem A — Character Select
+
+> 3D fighters disappeared.
+
+
+
+That's a rendering/asset-resolution regression. We should restore that immediately.
+
+Problem B — Animation
+
+> Rigged GLBs exist, but the pre-combat gate can't yet prove the animation clips deform those actual skeletons.
+
+
+
+That's the deeper pipeline problem.
+
+And the screen you pasted is useful because it proves the rigging side has moved forward:
+
+Skeleton: SKINNED ✅
+Visible Skinned Mesh: PRESENT ✅
+
+So I would not let Grok undo the strict gate just to make the game appear playable. The correct next milestone is to make the real Bannon motion bank drive those real rigged-ready skeletons and then turn those runtime measurements into evidence.
+
+Also, the VFXOverlay arc() crash should remain fixed separately; it isn't the reason the fighters disappeared.

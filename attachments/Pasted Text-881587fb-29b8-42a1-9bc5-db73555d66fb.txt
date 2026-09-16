@@ -1,0 +1,17 @@
+The reason those boxes are empty right now is that the grid logic is drawing the UI squares, but it doesn't have any 2D image assets assigned to fill them. It knows a character exists in that slot, but it has no .png face to show you.
+In the PSX era, they didn't render the 3D model inside those tiny boxes. They took a static headshot of the model, crunched the resolution down to like 64x64 pixels, and just loaded that flat image into the UI square.
+To fix this in your AI Studio preview without breaking the 3D viewport, you just need to update the character data structure to look for a 2D portrait image, and then tell the UI layer to draw it.
+How to Get Your Portraits First (Asset-First Logic)
+Since you are pulling the .glb models from the Bannon drive, just pose them, take a screenshot of their faces, crop it into a perfect square, and scale it down so it looks pixelated. Upload those headshots to your drive or host as .png files.
+The AI Studio Correction Prompt
+Copy and paste this exact directive to Google AI Studio to wire those images into the grid:
+BRUTAL FISTS UI OVERRIDE: POPULATE GRID PORTRAITS
+CURRENT ISSUE: The 2D character select boxes at the bottom of the screen are rendering empty.
+EXECUTION DIRECTIVE:
+Update the Character Select state logic to display 2D portraits inside the grid boxes.
+ * Update the Data Structure: Modify the existing character roster array. Every character object must now include a portraitUrl property (expecting a standard .png or .jpg static image).
+ * Update the UI Canvas: Modify the 2D UI grid renderer. Instead of drawing an empty box or a solid color, it must render the character's portraitUrl image inside the bounds of the grid square.
+ * Active State Styling: When the grid cursor is hovering over a character, give that specific box a bright retro border (like yellow or cyan) so the player knows it is selected.
+Do not touch or rewrite the 3D viewport logic. The 3D .glb models should still load up top exactly as they do now. Only update the 2D UI layer to show the face sprites in the grid.
+Output the updated grid rendering code block.
+Send that. It will map the 2D images directly to the UI layer, and your grid will instantly look like a classic Tekken select screen instead of a row of blank squares.

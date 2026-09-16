@@ -1,0 +1,47 @@
+Worked for 18s
+
+Yes. Before Grok changed it, the Character Select was intentionally a hybrid 2D/3D screen, with the 3D fighters being the dominant visual element—not a mostly-2D roster screen.
+
+The original proportion
+
+The structure we had established was roughly:
+
+┌──────────────────────────────────────────────┐
+│                                              │
+│          3D FIGHTER          3D FIGHTER     │
+│             ~57% of screen height            │
+│                                              │
+│        P1        VS / TIMER        P2         │
+├──────────────────────────────────────────────┤
+│                                              │
+│       2D CHARACTER ROSTER / SELECT GRID     │
+│                                              │
+│       portraits • names • selection frames  │
+│             ~43% of screen height            │
+└──────────────────────────────────────────────┘
+
+So the 3D portion was approximately 57% of the vertical screen and the 2D selection/roster portion approximately 43%.
+
+The important part wasn't merely the numbers, though. The screen had two different jobs:
+
+3D = the fighter being selected/previewed. The actual Bannon/Brutal-Fist GLB was supposed to be visible and large.
+
+2D = the roster/navigation layer. Character portraits/images, names, selection indicators and the arcade-style roster lived underneath.
+
+The visual language was Tekken 3-inspired, but using our Brutal Fist characters and imagery, not Tekken characters.
+
+
+That distinction matters because Grok's change can make the screen look like a conventional 2D character-selection menu even though our original concept was essentially an arcade character-select screen with a large live 3D presentation window attached to the roster.
+
+What I'm keeping on my work side
+
+I'm treating the original layout as the target again:
+
+3D preview → ~57%
+2D roster/select UI → ~43%
+
+And I'm keeping that separate from the new Moveset Creation / Animation Test Arena we're building. The character-select screen should select a fighter; the moveset/test scene is where we verify the actual skeleton, clips, retargeting and visible deformation.
+
+I also checked the current Brutal-Fist work rather than assuming the old layout is still intact. The live-animation proof lane is still PR #22, based on the animation integration branch, and it deliberately does not claim deformation is fixed until a real skinned GLB produces measurable vertex movement.
+
+So I'm continuing with the original hybrid 57/43 concept, while keeping the animation/rig work independent enough that Grok/Rocket can merge the finished pieces without replacing the character-select architecture again.
